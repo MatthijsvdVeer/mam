@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="13.6.1" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>4f6c7d2e-9b1a-4e3f-8a5d-2c7b9e1f0a36</UserSecretsId>
+    <!-- Use NuGet-restored DCP/dashboard so the AppHost also runs via dotnet run / F5 without the Aspire CLI. -->
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AgentFramework.DevUI" />
+    <!-- Contains the DevUI web frontend served by the aggregator; without it /devui/ returns 404. -->
+    <PackageReference Include="Microsoft.Agents.AI.DevUI" />
+    <PackageReference Include="MessagePack" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mam.Researcher\Mam.Researcher.csproj" />
+    <ProjectReference Include="..\Mam.MenuWriter\Mam.MenuWriter.csproj" />
+    <ProjectReference Include="..\Mam.BrandDesign\Mam.BrandDesign.csproj" />
+  </ItemGroup>
+
+</Project>
