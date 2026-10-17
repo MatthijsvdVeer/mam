@@ -1,4 +1,5 @@
 using Mam.Agents;
+using Mam.Agents.Tools;
 using Mam.Workflow;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting;
@@ -56,6 +57,9 @@ var app = builder.Build();
 // DevUI (via the Aspire aggregator) talks to the workflow through these OpenAI-compatible endpoints.
 app.MapOpenAIResponses();
 app.MapOpenAIConversations();
+
+// Serves the images created by the brand designer's GenerateImage tool.
+app.MapGeneratedImages();
 
 app.MapDefaultEndpoints();
 

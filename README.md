@@ -9,7 +9,7 @@ You don't need a clone of the Agent Framework repo.
 
 ## Agents
 
-| Agent (DevUI name) | Project | What it does | Tools (stubbed) |
+| Agent (DevUI name) | Project | What it does | Tools |
 |---|---|---|---|
 | `researcher` | `src/Mam.Researcher` | Researches a topic (cuisine, location, trends, competitors) and returns findings with sources | `WebSearch`, `WebFetch` |
 | `menu-writer` | `src/Mam.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
@@ -21,8 +21,12 @@ ASP.NET Core service. It's created with `AIProjectClient.AsAIAgent(...)` and exp
 Responses/Conversations endpoints (`Microsoft.Agents.AI.Hosting.OpenAI`). The Aspire AppHost connects all
 services to a single **DevUI** resource.
 
-The tools are stubs that return canned data (see `src/Mam.Agents/Tools`), so the demo runs without any external
-services besides the model.
+The tools live in `src/Mam.Agents/Tools`. `GenerateImage` is real: it calls the `gpt-image-2.5-flare` deployment
+in the same Foundry account. The account-level `/openai/v1` endpoint is used because the project endpoint doesn't
+serve image generation. The images are saved to `%TEMP%\mam-images` and served by the agent service at `/images/{file}`.
+DevUI's Markdown renderer doesn't show inline images, so the agents return them as links. The agent runs tool calls
+concurrently (`AllowConcurrentInvocation`), so the logo, the mood board and the interior picture are generated in parallel (~20 s).
+The other tools are still stubs that return canned data.
 
 ```
 src/
@@ -68,7 +72,8 @@ The other steps appear in DevUI's **Events** panel (and in **Traces**) as they f
 
 - .NET 10 SDK
 - Optional: the [Aspire CLI](https://aspire.dev/get-started/install-cli/), for `aspire run`. You can also use `dotnet run` or F5.
-- An existing **Microsoft Foundry** account with a **project** and a `gpt-4.1` model deployment
+- An existing **Microsoft Foundry** account with a **project**, a `gpt-4.1` model deployment and a
+  `gpt-image-2.5-flare` image deployment
 - Azure CLI signed in (`az login`). Your user needs the **Azure AI User** role (or higher) on the Foundry project.
 
 ## Configure
@@ -82,14 +87,17 @@ it when the Aspire dashboard asks for it.
     "project": "Endpoint=https://<foundry-account>.services.ai.azure.com/api/projects/<project>"
   },
   "Parameters": {
-    "modelDeployment": "gpt-4.1"
+    "modelDeployment": "gpt-4.1",
+    "imageDeployment": "gpt-image-2.5-flare"
   }
 }
 ```
 
 The AppHost passes this to each agent as `ConnectionStrings__project`. It's a plain connection string, so Aspire
-doesn't provision or deploy anything to Azure. The agents authenticate with `DefaultAzureCredential`, which uses
-your `az login`.
+doesn't provision or deploy anything to Azure. The agents and the image tool use one shared
+`AzureCliCredential`, which uses your `az login` (no API keys). `DefaultAzureCredential` made the first request after
+startup take about 2 minutes on a dev machine, because it probes other credential sources first. In production, use
+e.g. `ManagedIdentityCredential`.
 
 ## Run
 

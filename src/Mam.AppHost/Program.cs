@@ -8,6 +8,9 @@ var project = builder.AddConnectionString("project");
 var modelDeployment = builder.AddParameter("modelDeployment")
     .WithDescription("The model deployment name used by all agents, e.g. gpt-4.1.");
 
+var imageDeployment = builder.AddParameter("imageDeployment")
+    .WithDescription("The image model deployment used by the brand designer's GenerateImage tool, e.g. gpt-image-2.5-flare.");
+
 // One service per agent. Resource names match the agent names registered with AddAIAgent(...)
 // so the DevUI aggregator can route to them.
 var researcher = builder.AddProject<Projects.Mam_Researcher>("researcher")
@@ -23,6 +26,7 @@ var menuWriter = builder.AddProject<Projects.Mam_MenuWriter>("menu-writer")
 var brandDesigner = builder.AddProject<Projects.Mam_BrandDesign>("brand-designer")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
+    .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)
     .WithReference(project);
 
 // The workflow service runs its own in-process copies of the agents and orchestrates them:
@@ -30,6 +34,7 @@ var brandDesigner = builder.AddProject<Projects.Mam_BrandDesign>("brand-designer
 var restaurantWorkflow = builder.AddProject<Projects.Mam_Workflow>("restaurant-workflow")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
+    .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)
     .WithReference(project);
 
 // DevUI aggregates all agents into a single web UI.

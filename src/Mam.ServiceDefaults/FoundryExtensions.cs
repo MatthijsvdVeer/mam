@@ -1,5 +1,6 @@
 using System.Data.Common;
 using Azure.AI.Projects;
+using Azure.Core;
 using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,11 @@ public static class FoundryExtensions
     public static TBuilder AddFoundryProjectClient<TBuilder>(this TBuilder builder, string connectionName)
         where TBuilder : IHostApplicationBuilder
     {
-        builder.Services.AddSingleton(_ =>
+        // Signs in with the Azure CLI (az login). DefaultAzureCredential probes several credential sources first, which made
+        // the first request after startup take minutes on a dev machine. In production, use e.g. ManagedIdentityCredential.
+        builder.Services.AddSingleton<TokenCredential>(_ => new AzureCliCredential());
+
+        builder.Services.AddSingleton(sp =>
         {
             var connectionString = builder.Configuration.GetConnectionString(connectionName)
                 ?? throw new InvalidOperationException(
@@ -27,8 +32,7 @@ public static class FoundryExtensions
             // The Aspire endpoint may carry an api-version query; AIProjectClient manages that itself.
             var projectEndpoint = new UriBuilder(endpoint) { Query = string.Empty }.Uri;
 
-            // DefaultAzureCredential is convenient for demos; prefer a specific credential (e.g. ManagedIdentityCredential) in production.
-            return new AIProjectClient(projectEndpoint, new DefaultAzureCredential());
+            return new AIProjectClient(projectEndpoint, sp.GetRequiredService<TokenCredential>());
         });
 
         return builder;

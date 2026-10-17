@@ -62,9 +62,12 @@ public static class RestaurantAgents
             - Typography suggestions (heading and body font).
             - A logo concept.
             If research notes are present in the conversation, ground the brand in them.
-            Use the GenerateImage tool to create a logo and a mood-board image, and include the returned image URLs as Markdown images.
+            Use the GenerateImage tool to create exactly three images, calling it for all three at once:
+            a logo (kind 'logo'), a mood board (kind 'mood-board') and a photorealistic picture of the proposed
+            dining room (kind 'interior', style 'photorealistic interior photography') that matches the vibe and palette.
+            Include the returned image URLs as Markdown links, e.g. [Logo](url), [Mood board](url), [Interior](url).
             """,
-        tools: [AIFunctionFactory.Create(BrandTools.GenerateImage)]);
+        tools: [AIFunctionFactory.Create(new BrandTools(services).GenerateImageAsync, name: "GenerateImage")]);
 
     public static AIAgent CreatePresenter(IServiceProvider services, string name = AgentNames.Presenter) => Create(
         services,
@@ -77,7 +80,7 @@ public static class RestaurantAgents
             # <Restaurant name> - <tagline>
             - **The idea**: two or three sentences that sell the concept.
             - **Why it works**: the most compelling research insights (keep the source URLs).
-            - **The brand**: story, vibe, colour palette and typography, and include the logo and mood-board images.
+            - **The brand**: story, vibe, colour palette and typography, with Markdown links to the logo, mood-board and interior images.
             - **The menu**: the full menu, with the signature dishes highlighted.
             - **Next steps**: three concrete next steps to open the restaurant.
             If the brand and menu disagree (e.g. on the name), pick the brand's recommended name and stay consistent.
@@ -93,11 +96,14 @@ public static class RestaurantAgents
 
         return services.GetRequiredService<AIProjectClient>()
             .AsAIAgent(
-                model: model,
-                name: name,
-                description: description,
-                instructions: instructions,
-                tools: tools,
+                new ChatClientAgentOptions
+                {
+                    Name = name,
+                    Description = description,
+                    ChatOptions = new ChatOptions { ModelId = model, Instructions = instructions, Tools = tools },
+                    // Run multiple tool calls from one model turn in parallel (e.g. the logo, mood board and interior).
+                    AllowConcurrentInvocation = true,
+                },
                 services: services)
             .AsBuilder()
             .UseOpenTelemetry(sourceName: environment.ApplicationName, configure: agent => agent.EnableSensitiveData = true)
