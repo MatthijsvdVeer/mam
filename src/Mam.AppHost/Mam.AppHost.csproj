@@ -20,6 +20,7 @@
     <ProjectReference Include="..\Mam.Researcher\Mam.Researcher.csproj" />
     <ProjectReference Include="..\Mam.MenuWriter\Mam.MenuWriter.csproj" />
     <ProjectReference Include="..\Mam.BrandDesign\Mam.BrandDesign.csproj" />
+    <ProjectReference Include="..\Mam.Workflow\Mam.Workflow.csproj" />
   </ItemGroup>
 
 </Project>

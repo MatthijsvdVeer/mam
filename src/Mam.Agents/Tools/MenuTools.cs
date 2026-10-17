@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Mam.MenuWriter;
+namespace Mam.Agents.Tools;
 
 /// <summary>
 /// Stubbed menu tools. They return canned data so the demo runs without external services.

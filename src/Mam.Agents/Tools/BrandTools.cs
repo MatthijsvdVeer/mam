@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Mam.BrandDesign;
+namespace Mam.Agents.Tools;
 
 /// <summary>
 /// Stubbed brand tools. They return canned data so the demo runs without external services.

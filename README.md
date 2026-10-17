@@ -14,22 +14,55 @@ You don't need a clone of the Agent Framework repo.
 | `researcher` | `src/Mam.Researcher` | Researches a topic (cuisine, location, trends, competitors) and returns findings with sources | `WebSearch`, `WebFetch` |
 | `menu-writer` | `src/Mam.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
 | `brand-designer` | `src/Mam.BrandDesign` | Turns the idea into a visual brand: name, tagline, vibe, palette, typography, logo | `GenerateImage` |
+| `restaurant-workflow` | `src/Mam.Workflow` | Workflow: turns an idea into a complete concept using all agents (see below) | - |
 
-Each agent runs in its own ASP.NET Core service. It's created with `AIProjectClient.AsAIAgent(...)` and exposed
-through OpenAI-compatible Responses/Conversations endpoints (`Microsoft.Agents.AI.Hosting.OpenAI`). The Aspire
-AppHost connects all three services to a single **DevUI** resource.
+The agent definitions (instructions and tools) live in the shared `Mam.Agents` library. Each agent runs in its own
+ASP.NET Core service. It's created with `AIProjectClient.AsAIAgent(...)` and exposed through OpenAI-compatible
+Responses/Conversations endpoints (`Microsoft.Agents.AI.Hosting.OpenAI`). The Aspire AppHost connects all
+services to a single **DevUI** resource.
 
-The tools are stubs that return canned data (see `*Tools.cs` in each project), so the demo runs without any
-external services besides the model. The agents aren't wired together yet; workflows come in a later step.
+The tools are stubs that return canned data (see `src/Mam.Agents/Tools`), so the demo runs without any external
+services besides the model.
 
 ```
 src/
-  Mam.AppHost/          Aspire AppHost: existing Foundry account + project, 3 agent services, DevUI
+  Mam.AppHost/          Aspire AppHost: existing Foundry account + project, agent services, workflow, DevUI
   Mam.ServiceDefaults/  Health checks, OpenTelemetry, service discovery, AddFoundryProjectClient(...)
+  Mam.Agents/           Shared agent definitions (instructions + stub tools), incl. the presenter
   Mam.Researcher/       researcher agent
   Mam.MenuWriter/       menu-writer agent
   Mam.BrandDesign/      brand-designer agent
+  Mam.Workflow/         restaurant-workflow: the agents tied together
 ```
+
+## The workflow
+
+`restaurant-workflow` turns one idea into a full restaurant concept:
+
+```mermaid
+flowchart LR
+    idea([idea]) --> intake --> researcher --> brief
+    brief --> brand-designer & menu-writer
+    brand-designer & menu-writer --> gather --> presenter --> concept([concept])
+```
+
+- **intake** (code): accepts the user's idea from the chat and starts the researcher.
+- **researcher** (agent): researches the idea.
+- **brief** (code): passes the idea and the research to the brand designer and the menu writer, which run **in parallel** (fan-out).
+- **gather** (code): waits for both (fan-in barrier), merges the results and passes them on.
+- **presenter** (agent): turns everything into a polished pitch. This is the workflow's output.
+
+Executors are the building blocks of a workflow. They can be agents (`agent.BindAsExecutor(...)`) or plain code
+(`Executor<T>` / `ChatProtocolExecutor`). Edges connect them in `WorkflowBuilder`. Agents in a workflow use the
+*chat protocol*: they collect chat messages and start working when they receive a `TurnToken`.
+
+The workflow is registered with `builder.AddWorkflow(...).AddAsAIAgent()`, so it behaves like any other agent:
+DevUI talks to it over the same Responses endpoint, and your idea is just the chat message. The workflow service
+hosts its own in-process instances of the agents from `Mam.Agents`, so one run shows up as a single trace in the
+Aspire dashboard.
+
+Only the presenter streams into the chat. Streaming several agents would mix their text into one chat message.
+The other steps appear in DevUI's **Events** panel (and in **Traces**) as they finish. A run takes about 2-3 minutes.
 
 ## Prerequisites
 
@@ -76,6 +109,8 @@ shows every agent run and tool call, because each agent is wrapped with `UseOpen
 - **researcher**: *"Research the market for a Korean-Mexican fusion street food restaurant in Rotterdam."*
 - **brand-designer**: *"Create a brand for a cosy, late-night Korean-Mexican taqueria aimed at students."*
 - **menu-writer**: *"Write a menu for 'Seoul Taco', a playful Korean-Mexican street food spot. Mid-range prices."*
+- **restaurant-workflow**: *"Let's make a restaurant that's an homage of early medieval times around current-day Utrecht."*
+- **restaurant-workflow**: *"Let's make a restaurant that's an homage of early medieval times around current-day Utrecht."*
 
 ## Gotcha: agent names
 
