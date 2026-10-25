@@ -23,7 +23,7 @@ The tools live in each agent project's `Tools` folder. `GenerateImage` is real: 
 in the same Foundry account. The account-level `/openai/v1` endpoint is used because the project endpoint doesn't
 serve image generation. The images are saved to `%TEMP%\mam-images` and served by the agent service at `/images/{file}`.
 DevUI's Markdown renderer doesn't show inline images, so the agents return them as links. The agent runs tool calls
-concurrently (`AllowConcurrentInvocation`), so the logo, the mood board and the interior picture are generated in parallel (~20 s).
+concurrently (`AllowConcurrentInvocation`), so the three logos (one per name option), the mood board and the interior picture are generated in parallel (~20 s).
 The other tools are still stubs that return canned data.
 
 ```text
@@ -46,14 +46,19 @@ src/
 flowchart LR
     idea([idea]) --> intake --> researcher --> brief
     brief --> brand-designer & menu-writer
-    brand-designer & menu-writer --> gather --> presenter --> concept([concept])
+    brand-designer & menu-writer --> gather --> shortlist
+    shortlist <--> pick-name[/pick-name: a human/]
+    shortlist --> presenter --> concept([concept])
 ```
 
 - **intake** (code): accepts the user's idea from the chat and starts the researcher.
 - **researcher** (agent): researches the idea.
 - **brief** (code): passes the idea and the research to the brand designer and the menu writer, which run **in parallel** (fan-out).
 - **gather** (code): waits for both (fan-in barrier), merges the results and passes them on.
-- **presenter** (agent): turns everything into a polished pitch. This is the workflow's output.
+- **shortlist** (code + a small extractor agent): pulls the three name options (each with its own logo) out of the
+  brand designer's answer and asks a human to pick one. The workflow **pauses** until someone does.
+- **pick-name** (request port): the human in the loop. See [Picking the name](#picking-the-name).
+- **presenter** (agent): turns everything into a polished pitch with the picked name. This is the workflow's output.
 
 Executors are the building blocks of a workflow. They can be agents (`agent.BindAsExecutor(...)`) or plain code
 (`Executor<T>` / `ChatProtocolExecutor`). Edges connect them in `WorkflowBuilder`. Agents in a workflow use the
@@ -66,6 +71,32 @@ Aspire dashboard.
 
 Only the presenter streams into the chat. Streaming several agents would mix their text into one chat message.
 The other steps appear in DevUI's **Events** panel (and in **Traces**) as they finish. A run takes about 2-3 minutes.
+
+### Picking the name
+
+The `pick-name` request port is the workflow's human-in-the-loop step. You can answer it in two ways:
+
+- **On the board**: click one of the three logo cards, or press `1`, `2` or `3`.
+- **In the chat (DevUI)**: the shortlist appears as a message ("reply with 1 to 3"). Reply with a number or a name.
+  The intake sees that a pick is open (shared workflow state) and forwards your reply to the shortlist step.
+  The Responses hosting doesn't surface workflow requests as approvals yet, so DevUI can't answer the port directly.
+
+### The workflow board (for live demos)
+
+DevUI's C# version only shows the workflow as a list of events. The workflow service also serves a full-screen
+**board** at `/board/` (the **Workflow board** link on the `restaurant-workflow` resource in the Aspire dashboard). It runs
+the same workflow, built by `RestaurantWorkflow.Build`, and shows it like a kitchen pass:
+
+- the graph, read from the workflow definition, lights up as executors start and finish;
+- every agent streams into its own ticket on the rail, with tool calls and generated images as they arrive;
+- when the workflow pauses, the three name options appear as logo cards for the audience to vote on;
+- the presenter's pitch ends the run as the final concept sheet.
+
+Type an idea and press **Fire the order**, or use **New order** to start over. Every run has a link (`/board/#run=<id>`)
+that replays it, so you can show a finished run again without waiting. Runs are kept in memory until the service restarts.
+
+Suggested demo: open the board full screen, ask the audience for an idea, fire it, talk through the fan-out while the
+brand designer and menu writer stream side by side, let the room shout a number for the name, then show the concept.
 
 ## The harness agent
 

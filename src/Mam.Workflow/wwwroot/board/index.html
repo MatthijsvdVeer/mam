@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The pass · restaurant workflow</title>
+  <link rel="stylesheet" href="board.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23d9a441'/%3E%3C/svg%3E">
+</head>
+<body data-state="idle">
+  <header class="masthead">
+    <h1 class="title">The pass</h1>
+    <form id="order" class="order" autocomplete="off">
+      <label class="visually-hidden" for="idea">Restaurant idea</label>
+      <input id="idea" name="idea" placeholder="A restaurant idea, e.g. Ramen bar for night owls in Utrecht" required>
+      <button id="fire" type="submit">Fire the order</button>
+    </form>
+    <div class="masthead-end">
+      <time id="clock" class="clock" aria-label="Run time">00:00</time>
+      <button id="reset" class="ghost" type="button" hidden>New order</button>
+    </div>
+  </header>
+
+  <section class="line" aria-label="Workflow">
+    <svg id="graph" role="img" aria-label="Workflow graph"></svg>
+    <p id="ticker" class="ticker" aria-live="polite"></p>
+  </section>
+
+  <main id="rail" class="rail" aria-label="Agents at work">
+    <!-- tickets are created by board.js -->
+  </main>
+
+  <section id="call" class="call" hidden aria-labelledby="call-title">
+    <div class="call-inner">
+      <h2 id="call-title">Name the restaurant</h2>
+      <p class="call-sub">The brand designer drew three logos. Pick one, the presenter takes it from there.</p>
+      <div id="options" class="options"></div>
+    </div>
+  </section>
+
+  <article id="concept" class="concept" hidden aria-label="The concept">
+    <div class="concept-sheet">
+      <header class="concept-head">
+        <div id="concept-logo" class="concept-logo"></div>
+        <h2 id="concept-name"></h2>
+        <button id="back" class="ghost" type="button">Back to the pass</button>
+      </header>
+      <div id="concept-body" class="concept-body md"></div>
+    </div>
+  </article>
+
+  <button id="show-concept" class="plated-btn" type="button" hidden>Show the concept</button>
+
+  <script src="vendor/marked.min.js"></script>
+  <script src="board.js"></script>
+</body>
+</html>

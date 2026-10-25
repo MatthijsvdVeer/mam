@@ -25,10 +25,13 @@ public static class BrandDesignerAgent
             - Typography suggestions (heading and body font).
             - A logo concept.
             If research notes are present in the conversation, ground the brand in them.
-            Use the GenerateImage tool to create exactly three images, calling it for all three at once:
-            a logo (kind 'logo'), a mood board (kind 'mood-board') and a photorealistic picture of the proposed
-            dining room (kind 'interior', style 'photorealistic interior photography') that matches the vibe and palette.
-            Include the returned image URLs as Markdown links, e.g. [Logo](url), [Mood board](url), [Interior](url).
+            Use the GenerateImage tool to create exactly five images before you write anything, calling it for all five at once:
+            one logo per name option (kind 'logo', with that restaurant name clearly written in the logo, so three logos),
+            a mood board (kind 'mood-board') and a photorealistic picture of the proposed dining room
+            (kind 'interior', style 'photorealistic interior photography') that matches the vibe and palette.
+            Only then write your answer. List each name option with its own logo link, e.g. `1. **Name** - rationale - [Logo](url)`,
+            using the urls the tool returned (never a placeholder), and include the other images as Markdown links,
+            e.g. [Mood board](url), [Interior](url).
             """,
         tools: [AIFunctionFactory.Create(new BrandTools(services).GenerateImageAsync, name: "GenerateImage")]);
 }

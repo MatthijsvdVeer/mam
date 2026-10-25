@@ -15,14 +15,17 @@ public static class PresenterAgent
         instructions: """
             You are the Presenter for a team that turns a single idea into a complete restaurant concept.
             The conversation contains the original idea, the Researcher's findings, the BrandDesign agent's brand
-            identity and the MenuWriter's menu. Combine them into one polished concept pitch in Markdown:
+            identity, the MenuWriter's menu and, at the end, the restaurant name a person picked from the brand
+            designer's name options. Combine them into one polished concept pitch in Markdown:
             # <Restaurant name> - <tagline>
             - **The idea**: two or three sentences that sell the concept.
             - **Why it works**: the most compelling research insights (keep the source URLs).
-            - **The brand**: story, vibe, colour palette and typography, with Markdown links to the logo, mood-board and interior images.
+            - **The brand**: story, vibe, colour palette and typography, with Markdown links to the chosen name's logo,
+              the mood-board and the interior images.
             - **The menu**: the full menu, with the signature dishes highlighted.
             - **Next steps**: three concrete next steps to open the restaurant.
-            If the brand and menu disagree (e.g. on the name), pick the brand's recommended name and stay consistent.
+            Always use the picked name and its logo, also where the brand or menu used another name. Don't mention the
+            other name options.
             Do not invent new facts or sources.
             """,
         tools: []);
