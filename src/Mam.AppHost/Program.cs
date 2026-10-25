@@ -30,9 +30,11 @@ var brandDesigner = builder.AddProject<Projects.Mam_Agents_BrandDesign>("brand-d
     .WithReference(project);
 
 // The workflow service runs its own in-process copies of the agents and orchestrates them:
-// researcher -> (brand-designer + menu-writer in parallel) -> presenter.
+// researcher -> (brand-designer + menu-writer in parallel) -> you pick the name -> presenter.
+// It also serves the live workflow board for demos at /board (linked in the Aspire dashboard).
 var restaurantWorkflow = builder.AddProject<Projects.Mam_Workflow>("restaurant-workflow")
     .WithHttpHealthCheck("/health")
+    .WithUrlForEndpoint("https", _ => new() { Url = "/board/", DisplayText = "Workflow board" })
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
     .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)
     .WithReference(project);
@@ -51,7 +53,7 @@ builder.AddDevUI("devui")
     .WithAgentService(researcher, agents: [new("researcher")])
     .WithAgentService(menuWriter, agents: [new("menu-writer")])
     .WithAgentService(brandDesigner, agents: [new("brand-designer")])
-    .WithAgentService(restaurantWorkflow, agents: [new("restaurant-workflow", "Turns an idea into a complete restaurant concept.")])
+    .WithAgentService(restaurantWorkflow, agents: [new("restaurant-workflow", "Turns an idea into a complete restaurant concept. Asks you to pick the name.")])
     .WithAgentService(restaurantHarness, agents: [new("restaurant-harness", "A lead agent that plans and delegates to the researcher, brand designer and menu writer.")])
     .WaitFor(researcher)
     .WaitFor(menuWriter)
