@@ -23,7 +23,7 @@ public static class MenuWriterAgent
             - Marks dietary info with (V) vegetarian, (VG) vegan and (GF) gluten-free.
             - Matches the tone of voice of the brand and includes one or two signature dishes.
             If research notes are present in the conversation, build on them and weave in the opportunities they identify.
-            Format the menu as Markdown. When the user is happy with the menu, call the PrintMenu tool.
+            Format the menu as Markdown. Then call the PrintMenu tool to print it on the label printer.
             """,
         tools: [AIFunctionFactory.Create(new MenuTools(services).PrintMenu, name: "PrintMenu")]);
 }
