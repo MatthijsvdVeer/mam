@@ -163,7 +163,8 @@ it when the Aspire dashboard asks for it.
   },
   "Parameters": {
     "modelDeployment": "gpt-4.1",
-    "imageDeployment": "gpt-image-2.5-flare"
+    "imageDeployment": "gpt-image-2.5-flare",
+    "printMenus": "false"
   }
 }
 ```
@@ -173,6 +174,13 @@ doesn't provision or deploy anything to Azure. The agents and the image tool use
 `AzureCliCredential`, which uses your `az login` (no API keys). `DefaultAzureCredential` made the first request after
 startup take about 2 minutes on a dev machine, because it probes other credential sources first. In production, use
 e.g. `ManagedIdentityCredential`.
+
+### Printing menus
+
+The menu writer's `PrintMenu` tool prints the menu on a 4" x 6" label printer (`PM-241-BT` by default; set the
+`MENU_PRINTER` environment variable to use another printer). The font shrinks until the menu fits on one label;
+if it still doesn't fit at 4.5pt, the rest is cut off. Printing is off by default (trees are expensive): set the
+`printMenus` parameter to `true` to print. When it's off, the menu is only logged. Printing only works on Windows.
 
 ## Run
 

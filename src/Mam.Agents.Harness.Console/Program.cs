@@ -54,5 +54,6 @@ static void UseAppHostSettings(ConfigurationManager configuration)
         ["ConnectionStrings:project"] = configuration.GetConnectionString("project") ?? appHost.GetConnectionString("project"),
         ["MODEL_DEPLOYMENT"] = configuration["MODEL_DEPLOYMENT"] ?? appHost["Parameters:modelDeployment"],
         ["IMAGE_DEPLOYMENT"] = configuration["IMAGE_DEPLOYMENT"] ?? appHost["Parameters:imageDeployment"],
+        ["PRINT_MENUS"] = configuration["PRINT_MENUS"] ?? appHost["Parameters:printMenus"],
     });
 }

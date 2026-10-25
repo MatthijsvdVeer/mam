@@ -18,6 +18,10 @@
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Menu printing">
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.13" />
+  </ItemGroup>
+
   <ItemGroup Label="Service defaults">
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.11.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.11.0" />

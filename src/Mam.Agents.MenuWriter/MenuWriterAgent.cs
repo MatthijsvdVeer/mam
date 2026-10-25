@@ -25,5 +25,5 @@ public static class MenuWriterAgent
             If research notes are present in the conversation, build on them and weave in the opportunities they identify.
             Format the menu as Markdown. When the user is happy with the menu, call the PrintMenu tool.
             """,
-        tools: [AIFunctionFactory.Create(MenuTools.PrintMenu)]);
+        tools: [AIFunctionFactory.Create(new MenuTools(services).PrintMenu, name: "PrintMenu")]);
 }

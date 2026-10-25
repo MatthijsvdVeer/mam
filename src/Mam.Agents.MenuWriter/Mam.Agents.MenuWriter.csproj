@@ -4,6 +4,8 @@
     <PackageReference Include="Microsoft.Agents.AI.Foundry" />
     <PackageReference Include="Microsoft.Agents.AI.Hosting" />
     <PackageReference Include="Microsoft.Agents.AI.Hosting.OpenAI" />
+    <!-- Prints menus on the label printer (Windows only, see MenuLabelPrinter). -->
+    <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>
 
   <ItemGroup>

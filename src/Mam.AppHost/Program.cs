@@ -11,6 +11,10 @@ var modelDeployment = builder.AddParameter("modelDeployment")
 var imageDeployment = builder.AddParameter("imageDeployment")
     .WithDescription("The image model deployment used by the brand designer's GenerateImage tool, e.g. gpt-image-2.5-flare.");
 
+// Feature toggle for the menu writer's PrintMenu tool. When false (the default) menus are only logged, not printed.
+var printMenus = builder.AddParameter("printMenus")
+    .WithDescription("Set to true to print menus on the label printer (MENU_PRINTER, default PM-241-BT). Trees are expensive.");
+
 // One service per agent. Resource names match the agent names registered with AddAIAgent(...)
 // so the DevUI aggregator can route to them.
 var researcher = builder.AddProject<Projects.Mam_Agents_Researcher>("researcher")
@@ -21,6 +25,7 @@ var researcher = builder.AddProject<Projects.Mam_Agents_Researcher>("researcher"
 var menuWriter = builder.AddProject<Projects.Mam_Agents_MenuWriter>("menu-writer")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
+    .WithEnvironment("PRINT_MENUS", printMenus)
     .WithReference(project);
 
 var brandDesigner = builder.AddProject<Projects.Mam_Agents_BrandDesign>("brand-designer")
@@ -36,6 +41,7 @@ var restaurantWorkflow = builder.AddProject<Projects.Mam_Workflow>("restaurant-w
     .WithHttpHealthCheck("/health")
     .WithUrlForEndpoint("https", _ => new() { Url = "/board/", DisplayText = "Workflow board" })
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
+    .WithEnvironment("PRINT_MENUS", printMenus)
     .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)
     .WithReference(project);
 
@@ -44,6 +50,7 @@ var restaurantWorkflow = builder.AddProject<Projects.Mam_Workflow>("restaurant-w
 var restaurantHarness = builder.AddProject<Projects.Mam_Agents_Harness>("restaurant-harness")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
+    .WithEnvironment("PRINT_MENUS", printMenus)
     .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)
     .WithReference(project);
 
