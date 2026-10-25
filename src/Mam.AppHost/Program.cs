@@ -38,8 +38,8 @@ var restaurantWorkflow = builder.AddProject<Projects.Mam_Workflow>("restaurant-w
     .WithReference(project);
 
 // The harness service hosts a single lead agent that plans, tracks todos and delegates to in-process copies
-// of the three agents as background tasks. Its full-screen terminal version is Mam.Harness.Console.
-var restaurantHarness = builder.AddProject<Projects.Mam_Harness>("restaurant-harness")
+// of the three agents as background tasks. Its full-screen terminal version is Mam.Agents.Harness.Console.
+var restaurantHarness = builder.AddProject<Projects.Mam_Agents_Harness>("restaurant-harness")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
     .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)

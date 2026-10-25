@@ -4,8 +4,8 @@
     <Project Path="src/Mam.Agents.BrandDesign/Mam.Agents.BrandDesign.csproj" />
     <Project Path="src/Mam.Agents.MenuWriter/Mam.Agents.MenuWriter.csproj" />
     <Project Path="src/Mam.Agents.Researcher/Mam.Agents.Researcher.csproj" />
-    <Project Path="src/Mam.Harness/Mam.Harness.csproj" />
-    <Project Path="src/Mam.Harness.Console/Mam.Harness.Console.csproj" />
+    <Project Path="src/Mam.Agents.Harness/Mam.Agents.Harness.csproj" />
+    <Project Path="src/Mam.Agents.Harness.Console/Mam.Agents.Harness.Console.csproj" />
     <Project Path="src/Mam.ServiceDefaults/Mam.ServiceDefaults.csproj" />
     <Project Path="src/Mam.Workflow/Mam.Workflow.csproj" />
   </Folder>

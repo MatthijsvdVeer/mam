@@ -5,7 +5,7 @@ using Mam.Agents.Researcher;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
-namespace Mam.Harness;
+namespace Mam.Agents.Harness;
 
 /// <summary>
 /// The restaurant harness: a <see cref="HarnessAgent"/> that plans the work with todos and delegates it to the
@@ -13,7 +13,7 @@ namespace Mam.Harness;
 /// </summary>
 /// <remarks>
 /// Unlike the workflow, nothing is wired up front: the harness decides which agents to call, in which order and
-/// what to ask them. Hosted for DevUI by this service and run full-screen by Mam.Harness.Console.
+/// what to ask them. Hosted for DevUI by this service and run full-screen by Mam.Agents.Harness.Console.
 /// </remarks>
 public static class RestaurantHarnessAgent
 {

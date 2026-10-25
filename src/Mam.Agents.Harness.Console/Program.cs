@@ -1,6 +1,6 @@
 using Harness.Shared.Console;
 using Harness.Shared.Console.ToolFormatters;
-using Mam.Harness;
+using Mam.Agents.Harness;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

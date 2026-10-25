@@ -12,7 +12,7 @@ A demo that turns a single idea into a restaurant concept with research, a brand
 | `menu-writer` | `src/Mam.Agents.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
 | `brand-designer` | `src/Mam.Agents.BrandDesign` | Turns the idea into a visual brand: name, tagline, vibe, palette, typography, logo | `GenerateImage` |
 | `restaurant-workflow` | `src/Mam.Workflow` | Workflow: turns an idea into a complete concept using all agents (see below) | - |
-| `restaurant-harness` | `src/Mam.Harness` | Harness agent: a lead that plans and delegates to the three agents itself (see below) | todos, modes, background agents |
+| `restaurant-harness` | `src/Mam.Agents.Harness` | Harness agent: a lead that plans and delegates to the three agents itself (see below) | todos, modes, background agents |
 
 Each agent project contains its own definition (instructions and tools) in the `Mam.Agents.<Agent>` namespace, e.g.
 `ResearcherAgent` in `Mam.Agents.Researcher`. Each agent runs in its own ASP.NET Core service. It's created with `AIProjectClient.AsAIAgent(...)` and exposed through OpenAI-compatible
@@ -34,8 +34,8 @@ src/
   Mam.Agents.MenuWriter/       menu-writer agent + its tools
   Mam.Agents.BrandDesign/      brand-designer agent + its tools
   Mam.Workflow/                restaurant-workflow: the agents tied together, incl. the presenter (Mam.Agents.Presenter)
-  Mam.Harness/                 restaurant-harness: a HarnessAgent that delegates to the agents, hosted for DevUI
-  Mam.Harness.Console/         the same harness agent in a full-screen terminal UI, for live demos
+  Mam.Agents.Harness/          restaurant-harness: a HarnessAgent that delegates to the agents, hosted for DevUI
+  Mam.Agents.Harness.Console/  the same harness agent in a full-screen terminal UI, for live demos
 ```
 
 ## The workflow
@@ -81,7 +81,7 @@ flowchart LR
     lead -. todos / mode .-> lead
 ```
 
-The harness adds these tools to the lead (defined in `src/Mam.Harness/RestaurantHarnessAgent.cs`):
+The harness adds these tools to the lead (defined in `src/Mam.Agents.Harness/RestaurantHarnessAgent.cs`):
 
 - **Todos** (`todos_add`, `todos_complete`, ...): the lead tracks its plan as a todo list.
 - **Modes** (`mode_set`): it starts in **plan** mode, where it proposes a plan and asks at most two questions.
@@ -98,10 +98,10 @@ are turned off for the lead, and its plan files go to `%TEMP%\mam-harness-memory
 DevUI only shows the final answer of a run. The terminal UI shows every step live: the mode, each tool call (with the
 agent and the task it gets), the todos and the token usage. The UI is the sample console from the
 [Agent Framework Harness samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/Harness),
-copied into `src/Mam.Harness.Console/HarnessConsole`.
+copied into `src/Mam.Agents.Harness.Console/HarnessConsole`.
 
 ```bash
-dotnet run --project src/Mam.Harness.Console
+dotnet run --project src/Mam.Agents.Harness.Console
 ```
 
 It reads the Foundry endpoint and deployments from `src/Mam.AppHost/appsettings.json`, so you don't need to start

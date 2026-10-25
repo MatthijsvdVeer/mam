@@ -21,7 +21,7 @@
     <ProjectReference Include="..\Mam.Agents.MenuWriter\Mam.Agents.MenuWriter.csproj" />
     <ProjectReference Include="..\Mam.Agents.BrandDesign\Mam.Agents.BrandDesign.csproj" />
     <ProjectReference Include="..\Mam.Workflow\Mam.Workflow.csproj" />
-    <ProjectReference Include="..\Mam.Harness\Mam.Harness.csproj" />
+    <ProjectReference Include="..\Mam.Agents.Harness\Mam.Agents.Harness.csproj" />
   </ItemGroup>
 
 </Project>

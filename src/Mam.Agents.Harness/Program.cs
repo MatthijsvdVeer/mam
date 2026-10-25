@@ -1,5 +1,5 @@
 using Mam.Agents.BrandDesign.Tools;
-using Mam.Harness;
+using Mam.Agents.Harness;
 using Microsoft.Agents.AI.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
