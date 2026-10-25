@@ -1,5 +1,8 @@
-using Mam.Agents;
-using Mam.Agents.Tools;
+using Mam.Agents.BrandDesign;
+using Mam.Agents.BrandDesign.Tools;
+using Mam.Agents.MenuWriter;
+using Mam.Agents.Presenter;
+using Mam.Agents.Researcher;
 using Mam.Workflow;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting;
@@ -10,11 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 builder.AddFoundryProjectClient("project");
 
-// The workflow hosts its own, in-process instances of the shared agent definitions.
-var researcher = builder.AddAIAgent(AgentNames.Researcher, (sp, name) => RestaurantAgents.CreateResearcher(sp, name));
-var brandDesigner = builder.AddAIAgent(AgentNames.BrandDesigner, (sp, name) => RestaurantAgents.CreateBrandDesigner(sp, name));
-var menuWriter = builder.AddAIAgent(AgentNames.MenuWriter, (sp, name) => RestaurantAgents.CreateMenuWriter(sp, name));
-var presenter = builder.AddAIAgent(AgentNames.Presenter, (sp, name) => RestaurantAgents.CreatePresenter(sp, name));
+// The workflow hosts its own, in-process instances of the agent definitions from the agent projects.
+var researcher = builder.AddAIAgent(ResearcherAgent.Name, (sp, name) => ResearcherAgent.Create(sp, name));
+var brandDesigner = builder.AddAIAgent(BrandDesignerAgent.Name, (sp, name) => BrandDesignerAgent.Create(sp, name));
+var menuWriter = builder.AddAIAgent(MenuWriterAgent.Name, (sp, name) => MenuWriterAgent.Create(sp, name));
+var presenter = builder.AddAIAgent(PresenterAgent.Name, (sp, name) => PresenterAgent.Create(sp, name));
 
 //  idea ─► intake ─► researcher ─► brief ─┬─► brand-designer ─┐
 //                                         └─► menu-writer ────┴─► gather ─► presenter ─► concept

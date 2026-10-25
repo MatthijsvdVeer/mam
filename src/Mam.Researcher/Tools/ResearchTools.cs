@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Mam.Agents.Tools;
+namespace Mam.Agents.Researcher.Tools;
 
 /// <summary>
 /// Stubbed research tools. They return canned data so the demo runs without external services.

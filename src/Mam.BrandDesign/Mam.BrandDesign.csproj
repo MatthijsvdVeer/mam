@@ -7,7 +7,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mam.Agents\Mam.Agents.csproj" />
     <ProjectReference Include="..\Mam.ServiceDefaults\Mam.ServiceDefaults.csproj" />
   </ItemGroup>
 

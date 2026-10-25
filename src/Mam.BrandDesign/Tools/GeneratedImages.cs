@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Mam.Agents.Tools;
+namespace Mam.Agents.BrandDesign.Tools;
 
 /// <summary>
 /// Stores generated images on disk and serves them over HTTP, so agents can link to them.
