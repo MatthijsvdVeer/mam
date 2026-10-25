@@ -4,13 +4,10 @@ A demo that turns a single idea into a restaurant concept with research, a brand
 [Microsoft Agent Framework](https://learn.microsoft.com/agent-framework/) (not Semantic Kernel), uses
 [Aspire](https://aspire.dev) to run it, and you try out the agents in **DevUI**.
 
-All packages come from NuGet (`Microsoft.Agents.AI.Foundry`, `Aspire.Hosting.AgentFramework.DevUI`, `Microsoft.Agents.AI.DevUI`, ...).
-You don't need a clone of the Agent Framework repo.
-
 ## Agents
 
 | Agent (DevUI name) | Project | What it does | Tools |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `researcher` | `src/Mam.Agents.Researcher` | Researches a topic (cuisine, location, trends, competitors) and returns findings with sources | `WebSearch`, `WebFetch` |
 | `menu-writer` | `src/Mam.Agents.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
 | `brand-designer` | `src/Mam.Agents.BrandDesign` | Turns the idea into a visual brand: name, tagline, vibe, palette, typography, logo | `GenerateImage` |
@@ -28,7 +25,7 @@ DevUI's Markdown renderer doesn't show inline images, so the agents return them 
 concurrently (`AllowConcurrentInvocation`), so the logo, the mood board and the interior picture are generated in parallel (~20 s).
 The other tools are still stubs that return canned data.
 
-```
+```text
 src/
   Mam.AppHost/                 Aspire AppHost: existing Foundry account + project, agent services, workflow, DevUI
   Mam.ServiceDefaults/         Health checks, OpenTelemetry, service discovery, AddFoundryProjectClient(...), CreateFoundryAgent(...)
