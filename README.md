@@ -11,17 +11,17 @@ You don't need a clone of the Agent Framework repo.
 
 | Agent (DevUI name) | Project | What it does | Tools |
 |---|---|---|---|
-| `researcher` | `src/Mam.Researcher` | Researches a topic (cuisine, location, trends, competitors) and returns findings with sources | `WebSearch`, `WebFetch` |
-| `menu-writer` | `src/Mam.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
-| `brand-designer` | `src/Mam.BrandDesign` | Turns the idea into a visual brand: name, tagline, vibe, palette, typography, logo | `GenerateImage` |
+| `researcher` | `src/Mam.Agents.Researcher` | Researches a topic (cuisine, location, trends, competitors) and returns findings with sources | `WebSearch`, `WebFetch` |
+| `menu-writer` | `src/Mam.Agents.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
+| `brand-designer` | `src/Mam.Agents.BrandDesign` | Turns the idea into a visual brand: name, tagline, vibe, palette, typography, logo | `GenerateImage` |
 | `restaurant-workflow` | `src/Mam.Workflow` | Workflow: turns an idea into a complete concept using all agents (see below) | - |
 
-The agent definitions (instructions and tools) live in the shared `Mam.Agents` library. Each agent runs in its own
-ASP.NET Core service. It's created with `AIProjectClient.AsAIAgent(...)` and exposed through OpenAI-compatible
+Each agent project contains its own definition (instructions and tools) in the `Mam.Agents.<Agent>` namespace, e.g.
+`ResearcherAgent` in `Mam.Agents.Researcher`. Each agent runs in its own ASP.NET Core service. It's created with `AIProjectClient.AsAIAgent(...)` and exposed through OpenAI-compatible
 Responses/Conversations endpoints (`Microsoft.Agents.AI.Hosting.OpenAI`). The Aspire AppHost connects all
 services to a single **DevUI** resource.
 
-The tools live in `src/Mam.Agents/Tools`. `GenerateImage` is real: it calls the `gpt-image-2.5-flare` deployment
+The tools live in each agent project's `Tools` folder. `GenerateImage` is real: it calls the `gpt-image-2.5-flare` deployment
 in the same Foundry account. The account-level `/openai/v1` endpoint is used because the project endpoint doesn't
 serve image generation. The images are saved to `%TEMP%\mam-images` and served by the agent service at `/images/{file}`.
 DevUI's Markdown renderer doesn't show inline images, so the agents return them as links. The agent runs tool calls
@@ -30,13 +30,12 @@ The other tools are still stubs that return canned data.
 
 ```
 src/
-  Mam.AppHost/          Aspire AppHost: existing Foundry account + project, agent services, workflow, DevUI
-  Mam.ServiceDefaults/  Health checks, OpenTelemetry, service discovery, AddFoundryProjectClient(...)
-  Mam.Agents/           Shared agent definitions (instructions + stub tools), incl. the presenter
-  Mam.Researcher/       researcher agent
-  Mam.MenuWriter/       menu-writer agent
-  Mam.BrandDesign/      brand-designer agent
-  Mam.Workflow/         restaurant-workflow: the agents tied together
+  Mam.AppHost/                 Aspire AppHost: existing Foundry account + project, agent services, workflow, DevUI
+  Mam.ServiceDefaults/         Health checks, OpenTelemetry, service discovery, AddFoundryProjectClient(...), CreateFoundryAgent(...)
+  Mam.Agents.Researcher/       researcher agent + its tools
+  Mam.Agents.MenuWriter/       menu-writer agent + its tools
+  Mam.Agents.BrandDesign/      brand-designer agent + its tools
+  Mam.Workflow/                restaurant-workflow: the agents tied together, incl. the presenter (Mam.Agents.Presenter)
 ```
 
 ## The workflow
@@ -62,7 +61,7 @@ Executors are the building blocks of a workflow. They can be agents (`agent.Bind
 
 The workflow is registered with `builder.AddWorkflow(...).AddAsAIAgent()`, so it behaves like any other agent:
 DevUI talks to it over the same Responses endpoint, and your idea is just the chat message. The workflow service
-hosts its own in-process instances of the agents from `Mam.Agents`, so one run shows up as a single trace in the
+references the agent projects and hosts its own in-process instances of the agents, so one run shows up as a single trace in the
 Aspire dashboard.
 
 Only the presenter streams into the chat. Streaming several agents would mix their text into one chat message.

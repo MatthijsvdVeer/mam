@@ -13,17 +13,17 @@ var imageDeployment = builder.AddParameter("imageDeployment")
 
 // One service per agent. Resource names match the agent names registered with AddAIAgent(...)
 // so the DevUI aggregator can route to them.
-var researcher = builder.AddProject<Projects.Mam_Researcher>("researcher")
+var researcher = builder.AddProject<Projects.Mam_Agents_Researcher>("researcher")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
     .WithReference(project);
 
-var menuWriter = builder.AddProject<Projects.Mam_MenuWriter>("menu-writer")
+var menuWriter = builder.AddProject<Projects.Mam_Agents_MenuWriter>("menu-writer")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
     .WithReference(project);
 
-var brandDesigner = builder.AddProject<Projects.Mam_BrandDesign>("brand-designer")
+var brandDesigner = builder.AddProject<Projects.Mam_Agents_BrandDesign>("brand-designer")
     .WithHttpHealthCheck("/health")
     .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
     .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)

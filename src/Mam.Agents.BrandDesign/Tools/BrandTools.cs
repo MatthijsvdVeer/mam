@@ -14,7 +14,7 @@ using OpenAI.Images;
 // The Entra ID (AuthenticationPolicy) ImageClient constructor is marked experimental.
 #pragma warning disable OPENAI001
 
-namespace Mam.Agents.Tools;
+namespace Mam.Agents.BrandDesign.Tools;
 
 /// <summary>
 /// Brand tools. <see cref="GenerateImageAsync"/> generates real images with an image model deployed in the same
