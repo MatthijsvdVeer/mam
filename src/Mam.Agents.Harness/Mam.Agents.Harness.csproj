@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <!-- Background agents, file memory and the token limits on HarnessAgentOptions are experimental, and so is the
+         OpenAI Responses chat client the harness runs on. -->
+    <NoWarn>$(NoWarn);MAAI001;OPENAI001</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Agents.AI.Foundry" />
+    <PackageReference Include="Microsoft.Agents.AI.Harness" />
+    <PackageReference Include="Microsoft.Agents.AI.Hosting" />
+    <PackageReference Include="Microsoft.Agents.AI.Hosting.OpenAI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mam.Agents.BrandDesign\Mam.Agents.BrandDesign.csproj" />
+    <ProjectReference Include="..\Mam.Agents.MenuWriter\Mam.Agents.MenuWriter.csproj" />
+    <ProjectReference Include="..\Mam.Agents.Researcher\Mam.Agents.Researcher.csproj" />
+    <ProjectReference Include="..\Mam.ServiceDefaults\Mam.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>

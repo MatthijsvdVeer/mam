@@ -13,15 +13,20 @@ public static class GeneratedImages
 
     private static readonly string Folder = Path.Combine(Path.GetTempPath(), "mam-images");
 
-    public static async Task<string> SaveAsync(BinaryData bytes, string kind, string baseUrl, CancellationToken cancellationToken)
+    /// <summary>
+    /// Saves the image and returns its URL: served over HTTP when <paramref name="baseUrl"/> is set, otherwise a
+    /// <c>file://</c> URL (e.g. when the agent runs in the harness console app, which has no web server).
+    /// </summary>
+    public static async Task<string> SaveAsync(BinaryData bytes, string kind, string? baseUrl, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(Folder);
 
         var slug = new string([.. kind.ToLowerInvariant().Select(c => char.IsAsciiLetterOrDigit(c) ? c : '-')]).Trim('-');
         var fileName = $"{(slug.Length > 0 ? slug : "image")}-{Guid.NewGuid():N}.png";
-        await File.WriteAllBytesAsync(Path.Combine(Folder, fileName), bytes.ToArray(), cancellationToken);
+        var path = Path.Combine(Folder, fileName);
+        await File.WriteAllBytesAsync(path, bytes.ToArray(), cancellationToken);
 
-        return $"{baseUrl}{Route}/{fileName}";
+        return baseUrl is null ? new Uri(path).AbsoluteUri : $"{baseUrl}{Route}/{fileName}";
     }
 
     /// <summary>Serves the generated images at <c>/images/{file}</c>.</summary>

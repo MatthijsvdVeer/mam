@@ -12,6 +12,7 @@
 
   <ItemGroup Label="Agent Framework">
     <PackageVersion Include="Microsoft.Agents.AI.Foundry" Version="1.25.0-preview.261014.1" />
+    <PackageVersion Include="Microsoft.Agents.AI.Harness" Version="1.25.0" />
     <PackageVersion Include="Microsoft.Agents.AI.Hosting" Version="1.25.0-preview.261014.1" />
     <PackageVersion Include="Microsoft.Agents.AI.Hosting.OpenAI" Version="1.25.0-alpha.261014.1" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />

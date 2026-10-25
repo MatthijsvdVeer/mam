@@ -37,6 +37,14 @@ var restaurantWorkflow = builder.AddProject<Projects.Mam_Workflow>("restaurant-w
     .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)
     .WithReference(project);
 
+// The harness service hosts a single lead agent that plans, tracks todos and delegates to in-process copies
+// of the three agents as background tasks. Its full-screen terminal version is Mam.Agents.Harness.Console.
+var restaurantHarness = builder.AddProject<Projects.Mam_Agents_Harness>("restaurant-harness")
+    .WithHttpHealthCheck("/health")
+    .WithEnvironment("MODEL_DEPLOYMENT", modelDeployment)
+    .WithEnvironment("IMAGE_DEPLOYMENT", imageDeployment)
+    .WithReference(project);
+
 // DevUI aggregates all agents into a single web UI.
 // The agent names must match AddAIAgent("<name>", ...) / AddWorkflow("<name>", ...) in each service's Program.cs.
 builder.AddDevUI("devui")
@@ -44,9 +52,11 @@ builder.AddDevUI("devui")
     .WithAgentService(menuWriter, agents: [new("menu-writer")])
     .WithAgentService(brandDesigner, agents: [new("brand-designer")])
     .WithAgentService(restaurantWorkflow, agents: [new("restaurant-workflow", "Turns an idea into a complete restaurant concept.")])
+    .WithAgentService(restaurantHarness, agents: [new("restaurant-harness", "A lead agent that plans and delegates to the researcher, brand designer and menu writer.")])
     .WaitFor(researcher)
     .WaitFor(menuWriter)
     .WaitFor(brandDesigner)
-    .WaitFor(restaurantWorkflow);
+    .WaitFor(restaurantWorkflow)
+    .WaitFor(restaurantHarness);
 
 builder.Build().Run();

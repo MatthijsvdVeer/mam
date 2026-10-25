@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- The harness APIs and the vendored sample console use experimental Agent Framework and OpenAI APIs. -->
+    <NoWarn>$(NoWarn);MAAI001;OPENAI001</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mam.Agents.Harness\Mam.Agents.Harness.csproj" />
+    <ProjectReference Include="..\Mam.ServiceDefaults\Mam.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reuse the AppHost's Foundry endpoint and deployments, so they're configured in one place. -->
+    <None Include="..\Mam.AppHost\appsettings.json" Link="apphost.appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
