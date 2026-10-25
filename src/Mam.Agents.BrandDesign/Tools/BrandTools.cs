@@ -65,9 +65,15 @@ public sealed class BrandTools(IServiceProvider services)
     }
 
     // The images are served by the service that generated them (see GeneratedImages.MapGeneratedImages).
-    private string BaseUrl()
+    // Without a web server (the harness console app), there's no base URL and the images are linked as files.
+    private string? BaseUrl()
     {
-        var addresses = services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()?.Addresses ?? [];
+        if (services.GetService<IServer>() is not { } server)
+        {
+            return null;
+        }
+
+        var addresses = server.Features.Get<IServerAddressesFeature>()?.Addresses ?? [];
         var address = addresses.FirstOrDefault(a => a.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
             ?? addresses.FirstOrDefault()
             ?? "http://localhost";
