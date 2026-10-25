@@ -1,9 +1,9 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Mam.AppHost/Mam.AppHost.csproj" />
-    <Project Path="src/Mam.BrandDesign/Mam.BrandDesign.csproj" />
-    <Project Path="src/Mam.MenuWriter/Mam.MenuWriter.csproj" />
-    <Project Path="src/Mam.Researcher/Mam.Researcher.csproj" />
+    <Project Path="src/Mam.Agents.BrandDesign/Mam.Agents.BrandDesign.csproj" />
+    <Project Path="src/Mam.Agents.MenuWriter/Mam.Agents.MenuWriter.csproj" />
+    <Project Path="src/Mam.Agents.Researcher/Mam.Agents.Researcher.csproj" />
     <Project Path="src/Mam.ServiceDefaults/Mam.ServiceDefaults.csproj" />
     <Project Path="src/Mam.Workflow/Mam.Workflow.csproj" />
   </Folder>

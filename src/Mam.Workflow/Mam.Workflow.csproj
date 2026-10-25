@@ -7,9 +7,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mam.BrandDesign\Mam.BrandDesign.csproj" />
-    <ProjectReference Include="..\Mam.MenuWriter\Mam.MenuWriter.csproj" />
-    <ProjectReference Include="..\Mam.Researcher\Mam.Researcher.csproj" />
+    <ProjectReference Include="..\Mam.Agents.BrandDesign\Mam.Agents.BrandDesign.csproj" />
+    <ProjectReference Include="..\Mam.Agents.MenuWriter\Mam.Agents.MenuWriter.csproj" />
+    <ProjectReference Include="..\Mam.Agents.Researcher\Mam.Agents.Researcher.csproj" />
     <ProjectReference Include="..\Mam.ServiceDefaults\Mam.ServiceDefaults.csproj" />
   </ItemGroup>
 

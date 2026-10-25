@@ -11,9 +11,9 @@ You don't need a clone of the Agent Framework repo.
 
 | Agent (DevUI name) | Project | What it does | Tools |
 |---|---|---|---|
-| `researcher` | `src/Mam.Researcher` | Researches a topic (cuisine, location, trends, competitors) and returns findings with sources | `WebSearch`, `WebFetch` |
-| `menu-writer` | `src/Mam.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
-| `brand-designer` | `src/Mam.BrandDesign` | Turns the idea into a visual brand: name, tagline, vibe, palette, typography, logo | `GenerateImage` |
+| `researcher` | `src/Mam.Agents.Researcher` | Researches a topic (cuisine, location, trends, competitors) and returns findings with sources | `WebSearch`, `WebFetch` |
+| `menu-writer` | `src/Mam.Agents.MenuWriter` | Writes a full restaurant menu that fits the concept and its vibe | `PrintMenu` |
+| `brand-designer` | `src/Mam.Agents.BrandDesign` | Turns the idea into a visual brand: name, tagline, vibe, palette, typography, logo | `GenerateImage` |
 | `restaurant-workflow` | `src/Mam.Workflow` | Workflow: turns an idea into a complete concept using all agents (see below) | - |
 
 Each agent project contains its own definition (instructions and tools) in the `Mam.Agents.<Agent>` namespace, e.g.
@@ -30,12 +30,12 @@ The other tools are still stubs that return canned data.
 
 ```
 src/
-  Mam.AppHost/          Aspire AppHost: existing Foundry account + project, agent services, workflow, DevUI
-  Mam.ServiceDefaults/  Health checks, OpenTelemetry, service discovery, AddFoundryProjectClient(...), CreateFoundryAgent(...)
-  Mam.Researcher/       researcher agent (Mam.Agents.Researcher) + its tools
-  Mam.MenuWriter/       menu-writer agent (Mam.Agents.MenuWriter) + its tools
-  Mam.BrandDesign/      brand-designer agent (Mam.Agents.BrandDesign) + its tools
-  Mam.Workflow/         restaurant-workflow: the agents tied together, incl. the presenter (Mam.Agents.Presenter)
+  Mam.AppHost/                 Aspire AppHost: existing Foundry account + project, agent services, workflow, DevUI
+  Mam.ServiceDefaults/         Health checks, OpenTelemetry, service discovery, AddFoundryProjectClient(...), CreateFoundryAgent(...)
+  Mam.Agents.Researcher/       researcher agent + its tools
+  Mam.Agents.MenuWriter/       menu-writer agent + its tools
+  Mam.Agents.BrandDesign/      brand-designer agent + its tools
+  Mam.Workflow/                restaurant-workflow: the agents tied together, incl. the presenter (Mam.Agents.Presenter)
 ```
 
 ## The workflow
