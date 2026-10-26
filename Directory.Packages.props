@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup Label="Aspire hosting">
-    <PackageVersion Include="Aspire.Hosting.AgentFramework.DevUI" Version="1.25.0-preview.261014.1" />
+    <PackageVersion Include="Aspire.Hosting.AgentFramework.DevUI" Version="1.26.0-preview.261023.1" />
     <PackageVersion Include="Microsoft.Agents.AI.DevUI" Version="1.25.0-preview.261014.1" />
     <!-- Patched version; DevUI pulls in 3.1.7 which has GHSA-qhrr-8q5h-9q3h. -->
     <PackageVersion Include="MessagePack" Version="3.1.12" />
