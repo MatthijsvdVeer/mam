@@ -12,7 +12,7 @@ public static class BrandDesignerAgent
     /// <summary>The agent name. It must match the name declared for DevUI in the AppHost.</summary>
     public const string Name = "brand-designer";
 
-    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryAgent(
+    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryProjectAgent(
         name,
         description: "Turns a restaurant idea into a visual brand and overall vibe.",
         instructions: """

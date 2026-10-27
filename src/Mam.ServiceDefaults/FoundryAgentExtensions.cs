@@ -12,7 +12,7 @@ public static class FoundryAgentExtensions
     /// Creates an agent backed by the Foundry project (see <see cref="FoundryExtensions.AddFoundryProjectClient"/>),
     /// using the MODEL_DEPLOYMENT model (default gpt-4.1) and wrapped with OpenTelemetry.
     /// </summary>
-    public static AIAgent CreateFoundryAgent(
+    public static AIAgent CreateFoundryProjectAgent(
         this IServiceProvider services, string name, string description, string instructions, IList<AITool> tools)
     {
         var configuration = services.GetRequiredService<IConfiguration>();

@@ -9,7 +9,7 @@ public static class PresenterAgent
 {
     public const string Name = "presenter";
 
-    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryAgent(
+    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryProjectAgent(
         name,
         description: "Combines research, brand and menu into one polished restaurant concept.",
         instructions: """
