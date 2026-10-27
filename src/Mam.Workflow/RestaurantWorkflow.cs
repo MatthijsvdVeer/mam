@@ -35,39 +35,39 @@ public static class RestaurantWorkflow
     {
         AIAgent Agent(string agentName) => services.GetRequiredKeyedService<AIAgent>(agentName);
 
+        // Agents become workflow executors. Each one passes what it received plus its own answer on to the next step.
+        var stepOptions = new AIAgentHostOptions { ForwardIncomingMessages = true, EmitAgentResponseEvents = true };
+        var researchAgent = Agent(ResearcherAgent.Name).BindAsExecutor(stepOptions);
+        var brandAgent = Agent(BrandDesignerAgent.Name).BindAsExecutor(stepOptions);
+        var menuAgent = Agent(MenuWriterAgent.Name).BindAsExecutor(stepOptions);
+        var presenterAgent = Agent(PresenterAgent.Name).BindAsExecutor(new AIAgentHostOptions { ForwardIncomingMessages = false });
+
         // Plain code executors (no LLM). Intake accepts the idea from the chat; brief and gather pass the conversation along.
         var brief = new RelayExecutor("brief", streamNextStep: streamAllAgents);
         var gather = new RelayExecutor("gather", streamNextStep: false);
 
-        // Agents become workflow executors. Each one passes what it received plus its own answer on to the next step.
-        var stepOptions = new AIAgentHostOptions { ForwardIncomingMessages = true, EmitAgentResponseEvents = true };
-        var research = Agent(ResearcherAgent.Name).BindAsExecutor(stepOptions);
-        var brand = Agent(BrandDesignerAgent.Name).BindAsExecutor(stepOptions);
-        var menu = Agent(MenuWriterAgent.Name).BindAsExecutor(stepOptions);
-        var present = Agent(PresenterAgent.Name).BindAsExecutor(new AIAgentHostOptions { ForwardIncomingMessages = false });
-
         // Human in the loop: the workflow pauses at the request port until someone picks a name.
         var pickName = RequestPort.Create<NamePickRequest, NamePickResponse>(PickNamePortId);
-        var shortlist = new ShortlistExecutor(CreateNameExtractor(services), pickName.Id, present.Id);
-        var intake = new IntakeExecutor(research.Id, shortlist.Id, streamNextStep: streamAllAgents);
+        var shortlist = new ShortlistExecutor(CreateNameExtractor(services), pickName.Id, presenterAgent.Id);
+        var intake = new IntakeExecutor(researchAgent.Id, shortlist.Id, streamNextStep: streamAllAgents);
 
         return new WorkflowBuilder(intake)
             .WithName(name)
             .WithDescription(Description)
-            .AddEdge(intake, research)
+            .AddEdge(intake, researchAgent)
             .AddEdge(intake, shortlist)
-            .AddEdge(research, brief)
-            .AddFanOutEdge(brief, [brand, menu])
-            .AddFanInBarrierEdge([brand, menu], gather)
+            .AddEdge(researchAgent, brief)
+            .AddFanOutEdge(brief, [brandAgent, menuAgent])
+            .AddFanInBarrierEdge([brandAgent, menuAgent], gather)
             .AddEdge(gather, shortlist)
             .AddEdge(shortlist, pickName)
             .AddEdge(pickName, shortlist)
-            .AddEdge(shortlist, present)
-            .WithOutputFrom(present)
+            .AddEdge(shortlist, presenterAgent)
+            .WithOutputFrom(presenterAgent)
             .Build();
     }
 
-    private static AIAgent CreateNameExtractor(IServiceProvider services) => services.CreateFoundryAgent(
+    private static AIAgent CreateNameExtractor(IServiceProvider services) => services.CreateFoundryProjectAgent(
         "name-extractor",
         description: "Extracts the brand designer's name options from the conversation.",
         instructions: """

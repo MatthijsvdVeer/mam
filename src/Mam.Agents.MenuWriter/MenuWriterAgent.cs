@@ -12,7 +12,7 @@ public static class MenuWriterAgent
     /// <summary>The agent name. It must match the name declared for DevUI in the AppHost.</summary>
     public const string Name = "menu-writer";
 
-    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryAgent(
+    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryProjectAgent(
         name,
         description: "Writes a complete restaurant menu that fits a concept and brand vibe.",
         instructions: """

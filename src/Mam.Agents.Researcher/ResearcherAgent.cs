@@ -12,7 +12,7 @@ public static class ResearcherAgent
     /// <summary>The agent name. It must match the name declared for DevUI in the AppHost.</summary>
     public const string Name = "researcher";
 
-    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryAgent(
+    public static AIAgent Create(IServiceProvider services, string name = Name) => services.CreateFoundryProjectAgent(
         name,
         description: "Researches a topic, such as a cuisine, a location or a restaurant trend, and reports cited findings.",
         instructions: """
